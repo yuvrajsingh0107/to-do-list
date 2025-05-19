@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: cursive;
+    }
+
+    h1 {
+      color: white;
+    }
+
+    Main {
+      min-width: 100%;
+      min-height: 100vh;
+      background-color: rgb(45, 53, 72);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #task {
+      width: 300px;
+      height: 30px;
+      color: white;
+      background-color: black;
+      border: 2px solid rgb(82, 81, 81);
+      padding: 0 10px;
+      border-radius: 10px;
+      
+    }
+    input { 
+      outline: none;
+      background-color: black;
+    }
+
+    /* #text -webkit-appearance: none; */
+
+    .add-task {
+      width: 100px;
+      height: 30px;
+      border-radius: 30px;
+      text-align: center;
+      background-color: rgb(191, 191, 79);
+    }
+
+    .output {
+      color: rgb(136, 53, 53);
+      /* background-color: #fff; */
+      width: 1000px;
+    }
+    .output li{
+      word-wrap: wrap;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      margin-bottom: 10px;
+      font-size: 30px;
+      /* background-color: #fff; */
+      border-top: 2px solid rgba(82, 81, 81, 0.724);
+      border-bottom: 2px solid rgba(82, 81, 81, 0.724);
+      border-radius: 15px;
+
+      /* display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 163px ; */
+    }.output li :nth-child(1){
+      /* max-width: 100px; */
+      min-width: 100PX;
+      border: 2px  solid rgb(252, 240, 240);
+
+      background-color: #d19a9a;
+      /* width: 300ppx; */
+    }
+  </style>
+</head>
+
+<body>
+  <Main>
+    <h1>To Do Lost</h1>
+    <div class="input">
+      <input type="text" placeholder="What To Do..." id="task">
+      <button class="add-task">ADD</button>
+    </div>
+    <div class="output">
+      <div class="categroi"> 
+      </div>
+      <ol class="task-list">
+      </ol>
+    </div>
+    <!-- <li>t1</li> -->
+    <!-- display task -->
+  </Main>
+  <script>
+    // localStorage.clear();
+    let taskList = document.querySelector(".task-list");
+    let tasks = document.querySelector("#task");
+    let addTask = document.querySelector(".add-task");
+    display();
+
+    // to display string in local storege
+    function display (){
+      let prvTask = localStorage.getItem("toDoTask");
+      taskList.innerHTML = ""
+      // console.log(prvTask)
+      if (prvTask !== null  ) {
+        let toDisplay = prvTask.split("&");
+        // console.log(toDisplay);
+        toDisplay.forEach(element => {
+          // add task
+          if(element != ""){
+
+            const para = document.createElement("li");
+            const node = document.createTextNode(element);
+            para.appendChild(node);
+            
+            // add button
+            const but = document.createElement("button");
+            const butText = document.createTextNode("DONE")
+            but.appendChild(butText);
+            but.classList.add("add-task");
+            but.classList.add("don-but");
+            para.appendChild(but);
+            taskList.appendChild(para);
+          }
+        });
+      }
+    }
+
+    // to add in local storage 
+    function addTaskToList  (x)  {
+      let prvTask = localStorage.getItem("toDoTask") +"" ;
+            console.log(prvTask)
+            console.log(typeof(prvTask))
+            
+        if(prvTask != "null") {
+          console.log("this is hitt")
+            localStorage.setItem("toDoTask",prvTask+"&"+x);
+          }else{
+            console.log("currect onne");
+              localStorage.setItem("toDoTask","&"+x);
+        }
+        console.log(localStorage.getItem("toDoTask"));
+        tasks.value = "";
+    }
+
+    // console.log(prvTask);
+    tasks.addEventListener("keypress", (event)=>{
+      // console.log("event trigrred " + event.key);
+      if(event.key === "Enter"){
+        let x = tasks.value;
+        if(x == null) return ;
+        addTaskToList(x);
+        display();
+      }
+    })
+    addTask.addEventListener("click", () => {
+      let x = tasks.value;
+      if (x === "") return;
+        addTaskToList(x);
+        display();
+    })
+
+    function deletElement(element){
+      localStorage.setItem("toDoTask", localStorage.getItem("toDoTask").replace("&"+element.textContent,""));
+      display();
+      console.log(element.textContent+"&");
+    }
+    taskList.addEventListener("click", (event)=>{
+      // console.log(event)
+      if(event.target.textContent === "DONE"){
+        // event.target.parentElement.innerHTML = "";
+        deletElement(event.target.parentElement.firstChild);
+      }
+    })
+  </script>
+</body>
+
+</html>
